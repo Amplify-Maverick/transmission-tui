@@ -16,13 +16,15 @@
 # checks (VPN, port binding, daemon control, reading settings.json) call sudo
 # themselves only where genuinely needed — you do NOT need to launch with sudo.
 
-TM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/tm"
+TM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ ! -d "$TM_DIR" ]; then
-    echo "Error: tm/ directory not found alongside transmission_manager.sh"
-    echo "Expected: $TM_DIR"
-    exit 1
-fi
+for f in lib.sh actions.sh menu.sh; do
+    if [ ! -f "$TM_DIR/$f" ]; then
+        echo "Error: $f not found alongside transmission_manager.sh"
+        echo "Expected: $TM_DIR/$f"
+        exit 1
+    fi
+done
 
 if ! command -v transmission-remote >/dev/null 2>&1; then
     echo "Error: transmission-remote is not installed or not on PATH."
